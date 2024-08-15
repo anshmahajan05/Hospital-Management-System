@@ -25,7 +25,8 @@ public class ScheduleDBDao implements ScheduleDao {
         this.authUserDao = authUserDao;
     }
 
-    private long getMaxId() throws DatabaseException {
+    @Override
+    public long getMaxId() throws DatabaseException {
         long max = 0;
         String sqlCommand = "SELECT MAX(ScheduleID) as maxScheduleId FROM schedule_tbl";
         logger.info("SQL Command to be executed: " + sqlCommand);
@@ -210,4 +211,78 @@ public class ScheduleDBDao implements ScheduleDao {
 
         return schedule;
     }
+
+    @Override
+    public ScheduleTbl findByDetails(LocalDate scheduleDate, LocalTime startTime, LocalTime endTime) throws DatabaseException {
+        ScheduleTbl schedule = null;
+        String sqlCommand = "SELECT * FROM schedule_tbl WHERE scheduleDate LIKE ? AND startTime LIKE ? AND endTime LIKE ?";
+        logger.info("SQL Command to be executed: " + sqlCommand);
+
+        try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
+            ps.setDate(1, Date.valueOf(scheduleDate));
+            ps.setTime(2, Time.valueOf(startTime));
+            ps.setTime(3, Time.valueOf(endTime));
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                long ScheduleId = rs.getLong("ScheduleId");
+                long DoctorId = rs.getLong("DoctorId");
+                AuthUserTbl Doctor = null;
+                try {
+                    Doctor = authUserDao.findById(DoctorId);
+                } catch (Exception e) {
+                    throw new DatabaseException("Doctor not present with id: " + DoctorId, e);
+                }
+                int scheduleStatus = rs.getInt("scheduleStatus");
+                String unavailabilityReason = rs.getString("unavailabilityReason");
+
+                schedule = new ScheduleTbl(ScheduleId, Doctor, scheduleDate, startTime, endTime, scheduleStatus, unavailabilityReason);
+
+                logger.info("Schedule fetched: " + schedule);
+            }
+        } catch (SQLException e) {
+            logger.error("SQL Error: " + e.getMessage());
+            logger.error(e);
+            throw new DatabaseException(e);
+        }
+
+        return schedule;
+    }
+
+    @Override
+    public List<ScheduleTbl> findByStartEndDate(LocalDate startDate, LocalDate endDate) throws DatabaseException {
+        List<ScheduleTbl> schedules = new ArrayList<ScheduleTbl>();
+        String sqlCommand = "SELECT * FROM schedule_tbl WHERE scheduleDate BETWEEN ? AND ?";
+        logger.info("SQL Command to be executed: " + sqlCommand);
+
+        try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                long ScheduleId = rs.getLong("ScheduleId");
+                long DoctorId = rs.getLong("DoctorId");
+                AuthUserTbl Doctor = null;
+                try {
+                    Doctor = authUserDao.findById(DoctorId);
+                } catch (Exception e) {
+                    throw new DatabaseException("Doctor not present with id: " + DoctorId, e);
+                }
+                LocalDate scheduleDate = rs.getDate("scheduleDate").toLocalDate();
+                LocalTime startTime = rs.getTime("StartTime").toLocalTime();
+                LocalTime endTime = rs.getTime("EndTime").toLocalTime();
+                int scheduleStatus = rs.getInt("scheduleStatus");
+                String unavailabilityReason = rs.getString("unavailabilityReason");
+
+                ScheduleTbl schedule = new ScheduleTbl(ScheduleId, Doctor, scheduleDate, startTime, endTime, scheduleStatus, unavailabilityReason);
+
+                logger.info("Schedule fetched: " + schedule);
+                schedules.add(schedule);
+            }
+        } catch (SQLException e) {
+            logger.error("SQL Error: " + e.getMessage());
+            logger.error(e);
+            throw new DatabaseException(e);
+        }
+
+        return schedules;
+    }
+
 }
