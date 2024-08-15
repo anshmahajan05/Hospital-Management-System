@@ -32,6 +32,23 @@ public class ScheduleTbl {
         this.unavailabilityReason = unavailabilityReason;
     }
 
+    public ScheduleTbl(AuthUserTbl doctor, LocalDate scheduleDate, LocalTime startTime, LocalTime endTime, int scheduleStatus) {
+        Doctor = doctor;
+        this.scheduleDate = scheduleDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.scheduleStatus = scheduleStatus;
+    }
+
+    public ScheduleTbl(AuthUserTbl doctor, LocalDate scheduleDate, LocalTime startTime, LocalTime endTime, int scheduleStatus, String unavailabilityReason) {
+        Doctor = doctor;
+        this.scheduleDate = scheduleDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.scheduleStatus = scheduleStatus;
+        this.unavailabilityReason = unavailabilityReason;
+    }
+
     public long getScheduleId() {
         return ScheduleId;
     }
@@ -86,5 +103,18 @@ public class ScheduleTbl {
 
     public void setUnavailabilityReason(String unavailabilityReason) {
         this.unavailabilityReason = unavailabilityReason;
+    }
+
+    @Override
+    public String toString() {
+        return "ScheduleTbl{" +
+                "ScheduleId=" + ScheduleId +
+                ", Doctor=" + Doctor +
+                ", scheduleDate=" + scheduleDate +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", scheduleStatus=" + scheduleStatus +
+                ", unavailabilityReason='" + unavailabilityReason + '\'' +
+                '}';
     }
 }

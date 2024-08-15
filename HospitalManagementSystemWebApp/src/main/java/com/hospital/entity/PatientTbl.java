@@ -62,4 +62,15 @@ public class PatientTbl {
     public void setAddedByUser(AuthUserTbl addedByUser) {
         this.addedByUser = addedByUser;
     }
+
+    @Override
+    public String toString() {
+        return "PatientTbl{" +
+                "PatientId=" + PatientId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", mobileNo='" + mobileNo + '\'' +
+                ", addedByUser=" + addedByUser +
+                '}';
+    }
 }

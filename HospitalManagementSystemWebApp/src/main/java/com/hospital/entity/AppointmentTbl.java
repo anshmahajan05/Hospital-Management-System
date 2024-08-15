@@ -82,4 +82,17 @@ public class AppointmentTbl {
     public void setAppointmentStatus(int appointmentStatus) {
         this.appointmentStatus = appointmentStatus;
     }
+
+    @Override
+    public String toString() {
+        return "AppointmentTbl{" +
+                "AppointmentId=" + AppointmentId +
+                ", patient=" + patient +
+                ", schedule=" + schedule +
+                ", suggestedTests='" + suggestedTests + '\'' +
+                ", suggestedMedicines='" + suggestedMedicines + '\'' +
+                ", sufferingFromDisease='" + sufferingFromDisease + '\'' +
+                ", appointmentStatus=" + appointmentStatus +
+                '}';
+    }
 }
