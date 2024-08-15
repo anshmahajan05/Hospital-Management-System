@@ -23,6 +23,20 @@ public class PatientTbl {
         this.addedByUser = addedByUser;
     }
 
+    public PatientTbl(String name, String email, String mobileNo, AuthUserTbl addedByUser) {
+        this.name = name;
+        this.email = email;
+        this.mobileNo = mobileNo;
+        this.addedByUser = addedByUser;
+    }
+
+    public PatientTbl(String name, String mobileNo, AuthUserTbl addedByUser) {
+        this.name = name;
+        this.mobileNo = mobileNo;
+        this.addedByUser = addedByUser;
+    }
+
+
     public long getPatientId() {
         return PatientId;
     }
