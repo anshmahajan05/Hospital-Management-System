@@ -74,7 +74,7 @@ public class AuthUserDBDao implements AuthUserDao {
                 throw new DatabaseException(e);
             }
         } catch (DatabaseException e) {
-            logger.error("Could not save the schedule: " + authUserTbl + " due to error: " + e.getMessage());
+            logger.error("Could not save the user: " + authUserTbl + " due to error: " + e.getMessage());
             logger.error(e);
             throw e;
         }
@@ -87,7 +87,7 @@ public class AuthUserDBDao implements AuthUserDao {
         boolean result = false;
         String sqlCommand = "UPDATE auth_user_tbl SET name=?, email=?, mobileNo=? WHERE UserId=? ";
         logger.info("SQL Command to be Executed: " + sqlCommand);
-        logger.info("Schedule to be Updated " + authUserTbl);
+        logger.info("User to be Updated " + authUserTbl);
 
         try(PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
             ps.setLong(4, authUserTbl.getUserId());
