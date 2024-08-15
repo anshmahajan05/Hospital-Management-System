@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class ScheduleDBDao implements ScheduleDao {
     private Connection conn;
@@ -27,48 +26,57 @@ public class ScheduleDBDao implements ScheduleDao {
     }
 
     private long getMaxId() throws DatabaseException {
+        long max = 0;
         String sqlCommand = "SELECT MAX(ScheduleID) as maxScheduleId FROM schedule_tbl";
+        logger.info("SQL Command to be executed: " + sqlCommand);
 
         try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
             ps.executeQuery();
             ResultSet rs = ps.getResultSet();
             if (rs.next()) {
-                return rs.getLong("maxScheduleId");
+                max = rs.getLong("maxScheduleId");
             }
         } catch (SQLException e) {
+            logger.error("SQL Error: " + e.getMessage());
+            logger.error(e);
             throw new DatabaseException(e);
         }
 
-        return 0;
+        return max;
     }
 
     @Override
     public boolean save(ScheduleTbl schedule) throws DatabaseException {
         boolean result = false;
         String sqlCommand = "INSERT INTO schedule_tbl VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            logger.info("SQL Command to be Executed: " + sqlCommand);
+            schedule.setScheduleId(getMaxId());
+            logger.info("Schedule to be saved: "+ schedule);
 
-        schedule.setScheduleId(getMaxId());
-        logger.info("Schedule to be saved: "+ schedule);
+            try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
+                ps.setLong(1, schedule.getScheduleId());
+                ps.setLong(2, schedule.getDoctor().getUserId());
+                ps.setDate(3, Date.valueOf(schedule.getScheduleDate()));
+                ps.setTime(4, Time.valueOf(schedule.getStartTime()));
+                ps.setTime(5, Time.valueOf(schedule.getEndTime()));
+                ps.setInt(6, schedule.getScheduleStatus());
+                ps.setString(7, schedule.getUnavailabilityReason());
 
-        logger.info("SQL Command to be Executed: " + sqlCommand);
-        try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
-            ps.setLong(1, schedule.getScheduleId());
-            ps.setLong(2, schedule.getDoctor().getUserId());
-            ps.setDate(3, Date.valueOf(schedule.getScheduleDate()));
-            ps.setTime(4, Time.valueOf(schedule.getStartTime()));
-            ps.setTime(5, Time.valueOf(schedule.getEndTime()));
-            ps.setInt(6, schedule.getScheduleStatus());
-            ps.setString(7, schedule.getUnavailabilityReason());
+                logger.info("SQL Command to be Executed: " + ps);
 
-            logger.info("SQL Command to be Executed: " + ps);
-
-            ps.executeUpdate();
-            result = true;
-            logger.info("Successfully saved the schedule: " + schedule);
-        } catch (SQLException e) {
+                ps.executeUpdate();
+                result = true;
+                logger.info("Successfully saved the schedule: " + schedule);
+            } catch (SQLException e) {
+                logger.error("Could not save the schedule: " + schedule + " due to error: " + e.getMessage());
+                logger.error(e);
+                throw new DatabaseException(e);
+            }
+        } catch (DatabaseException e) {
             logger.error("Could not save the schedule: " + schedule + " due to error: " + e.getMessage());
             logger.error(e);
-            throw new DatabaseException(e);
+            throw e;
         }
 
         return result;
