@@ -9,8 +9,9 @@ public class AuthUserTbl {
     private String username;
     private String password;
     private String role;
+    private AuthUserTbl addedByUser;
 
-    public AuthUserTbl(long userId, String name, String email, String mobileNo, String username, String password, String role) {
+    public AuthUserTbl(long userId, String name, String email, String mobileNo, String username, String password, String role, AuthUserTbl addedByUser) {
         this.UserId = userId;
         this.name = name;
         this.email = email;
@@ -18,6 +19,10 @@ public class AuthUserTbl {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.addedByUser = addedByUser;
+    }
+
+    public AuthUserTbl(long userId, String name, String email, String mobileNo, AuthUserTbl addedByUser) {
     }
 
     public long getUserId() {
@@ -76,16 +81,16 @@ public class AuthUserTbl {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "AuthUserTbl{" +
-                "UserId=" + UserId +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", mobileNo='" + mobileNo + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                '}';
+
+    public void add(AuthUserTbl authUserTbl) {
+
+    }
+
+    public AuthUserTbl getAddedByUser() {
+        return addedByUser;
+    }
+
+    public void setAddedByUser(AuthUserTbl addedByUser) {
+        this.addedByUser = addedByUser;
     }
 }
