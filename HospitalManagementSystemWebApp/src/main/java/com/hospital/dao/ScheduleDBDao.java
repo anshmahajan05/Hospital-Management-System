@@ -52,7 +52,7 @@ public class ScheduleDBDao implements ScheduleDao {
         String sqlCommand = "INSERT INTO schedule_tbl VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             logger.info("SQL Command to be Executed: " + sqlCommand);
-            schedule.setScheduleId(getMaxId());
+            schedule.setScheduleId(getMaxId() + 1);
             logger.info("Schedule to be saved: "+ schedule);
 
             try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
