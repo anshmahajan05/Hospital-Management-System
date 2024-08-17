@@ -10,6 +10,7 @@ import com.hospital.interfaces.*;
 import org.apache.log4j.Logger;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -123,7 +124,55 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
 
     @Override
     public boolean addSchedule(ScheduleTbl schedule) throws ServiceException {
-        return false;
+        logger.info("ServiceImpl addSchedule of Doctor " + schedule.getDoctor());
+        boolean result = false;
+
+        try {
+            if(authUserDao.findById(schedule.getDoctor().getUserId()) == null) {
+                logger.error("Doctor with id " + schedule.getDoctor().getUserId() + " not found");
+                throw new ServiceException("Doctor with id " + schedule.getDoctor().getUserId() + " not found");
+            }
+
+            if(scheduleDao.findByDetails(schedule.getScheduleDate(), schedule.getStartTime(), schedule.getEndTime()) != null) {
+                logger.error("Schedule already exists");
+                throw new ServiceException("Schedule already exists");
+            }
+
+            if (schedule.getScheduleDate().isBefore(LocalDate.now())) {
+                logger.error("You cannot add schedule for past date");
+                throw new ServiceException("You cannot add schedule for past date");
+            }
+
+            if (schedule.getStartTime().isBefore(LocalTime.of(9, 0)) || schedule.getStartTime().isAfter(LocalTime.of(18, 0))) {
+                logger.error("Schedule start time should be between 9AM to 6PM");
+                throw new ServiceException("Schedule start time should be between 9AM to 6PM");
+            }
+
+            if (schedule.getEndTime().isBefore(LocalTime.of(9, 0)) || schedule.getEndTime().isAfter(LocalTime.of(18, 0))) {
+                logger.error("Schedule start time should be between 9AM to 6PM");
+                throw new ServiceException("Schedule start time should be between 9AM to 6PM");
+            }
+
+            if (schedule.getScheduleDate().isAfter(LocalDate.now().plusDays(3))) {
+                logger.error("You cannot add schedule for more than 3 days in advance");
+                throw new ServiceException("You cannot add schedule for more than 3 days in advance");
+            }
+
+            if (schedule.getStartTime().isAfter(schedule.getEndTime())) {
+                logger.error("Schedule end time should be after start time");
+                throw new ServiceException("Schedule end time should be after start time");
+            }
+
+            logger.info("Adding schedule " + schedule + " to database");
+            result = scheduleDao.save(schedule);
+            logger.info("Adding schedule " + schedule + " successfully");
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+
+        return result;
     }
 
     @Override
@@ -171,6 +220,8 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
             authUser = authUserDao.authenticate(username, password);
             logger.info("Login Service Login Success with authuser: " + authUser);
         } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
             throw new ServiceException(e);
         }
 

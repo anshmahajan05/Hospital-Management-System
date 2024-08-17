@@ -1,7 +1,6 @@
 package com.hospital.entity;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.hospital.hashing.Hash;
 
 // table name: auth_user_tbl
 public class AuthUserTbl {
@@ -30,6 +29,20 @@ public class AuthUserTbl {
         this.username = username;
         setPassword(password);
         this.role = role;
+    }
+
+    public AuthUserTbl(long userId, String name, String email, String mobileNo, String role) {
+        UserId = userId;
+        this.name = name;
+        this.email = email;
+        this.mobileNo = mobileNo;
+        this.role = role;
+    }
+
+    public AuthUserTbl(String username, String password, long userId) {
+        this.username = username;
+        setPassword(password);
+        UserId = userId;
     }
 
     public long getUserId() {
@@ -77,30 +90,7 @@ public class AuthUserTbl {
     }
 
     public void setPassword(String password) {
-        this.password = hashPassword(password);
-    }
-
-    private String hashPassword(String password) {
-        try {
-            // Create a SHA-256 MessageDigest instance
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-
-            // Perform the hash computation
-            byte[] hashedBytes = digest.digest(password.getBytes());
-
-            // Convert the byte array into a hex string
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hashedBytes) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error hashing password", e);
-        }
+        this.password = Hash.hashPassword(password);
     }
 
     public String getRole() {

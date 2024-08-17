@@ -85,17 +85,16 @@ public class AuthUserDBDao implements AuthUserDao {
     @Override
     public boolean update(AuthUserTbl authUserTbl) throws DatabaseException {
         boolean result = false;
-        String sqlCommand = "UPDATE auth_user_tbl SET name=?, email=?, mobileNo=?, password=?, role=? WHERE UserId=? ";
+        String sqlCommand = "UPDATE auth_user_tbl SET name=?, email=?, mobileNo=?, role=? WHERE UserId=? ";
         logger.info("SQL Command to be Executed: " + sqlCommand);
         logger.info("User to be Updated " + authUserTbl);
 
         try(PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
-            ps.setLong(6, authUserTbl.getUserId());
+            ps.setLong(5, authUserTbl.getUserId());
             ps.setString(1, authUserTbl.getName());
             ps.setString(2, authUserTbl.getEmail());
             ps.setString(3, authUserTbl.getMobileNo());
-            ps.setString(4, authUserTbl.getPassword());
-            ps.setString(5, authUserTbl.getRole());
+            ps.setString(4, authUserTbl.getRole());
 
             ps.executeUpdate();
             result = true;
@@ -128,7 +127,9 @@ public class AuthUserDBDao implements AuthUserDao {
                 logger.error(e);
                 throw new DatabaseException(e);
             }
-        } catch (Exception e) {
+        } catch (DatabaseException e) {
+            logger.error("Could not delete the user: " + UserId + " due to error: " + e.getMessage());
+            logger.error(e);
             throw new DatabaseException(e);
         }
 
@@ -231,6 +232,9 @@ public class AuthUserDBDao implements AuthUserDao {
         return authUserTbl;
     }
 
+    // while doing this ensure that u use hash the password first with function in com.Hospital.hashing package
+    // and verify the hash password with database
+    // for example see setPassword of AuthUserTbl
     @Override
     public AuthUserTbl authenticate(String username, String password) throws DatabaseException {
         return null;

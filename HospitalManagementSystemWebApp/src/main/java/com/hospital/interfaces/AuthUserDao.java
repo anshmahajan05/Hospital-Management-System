@@ -13,7 +13,7 @@ public interface AuthUserDao {
     AuthUserTbl findById (long id ) throws DatabaseException;
     List<AuthUserTbl> findAll () throws DatabaseException;
     public long getMaxId() throws DatabaseException;
-    // TO DO TASKS: to be implemented by Anushka
     public AuthUserTbl findByUsername (String username) throws DatabaseException;
+    // TO DO TASKS: to be implemented by Anushka
     public AuthUserTbl authenticate(String username, String password) throws DatabaseException;
 }
