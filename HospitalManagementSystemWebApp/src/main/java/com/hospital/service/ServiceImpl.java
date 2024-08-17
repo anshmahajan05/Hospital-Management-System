@@ -181,7 +181,7 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
     }
 
     @Override
-    public HashMap<LocalDate, List<ScheduleDao>> viewSchedule() throws ServiceException {
+    public HashMap<LocalDate, List<ScheduleTbl>> viewSchedule() throws ServiceException {
         return null;
     }
 
@@ -191,8 +191,59 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
     }
 
     @Override
-    public boolean updateSchedule(ScheduleDao schedule) throws ServiceException {
-        return false;
+    public boolean updateSchedule(ScheduleTbl schedule) throws ServiceException {
+        boolean result = false;
+        try {
+            if(scheduleDao.findById(schedule.getScheduleId()) == null) {
+                logger.error("Schedule with id " + schedule.getScheduleId() + " not found");
+                throw new ServiceException("Schedule with id " + schedule.getScheduleId() + " not found");
+            }
+
+            if(authUserDao.findById(schedule.getDoctor().getUserId()) == null) {
+                logger.error("Doctor with id " + schedule.getDoctor().getUserId() + " not found");
+                throw new ServiceException("Doctor with id " + schedule.getDoctor().getUserId() + " not found");
+            }
+
+            if(scheduleDao.findByDetails(schedule.getScheduleDate(), schedule.getStartTime(), schedule.getEndTime()) != null) {
+                logger.error("Schedule already exists for Date: " + schedule.getScheduleDate() + " and Time: " + schedule.getStartTime() + " - " + schedule.getEndTime());
+                throw new ServiceException("Schedule already exists");
+            }
+
+            if (schedule.getScheduleDate().isBefore(LocalDate.now())) {
+                logger.error("You cannot add schedule for past date");
+                throw new ServiceException("You cannot add schedule for past date");
+            }
+
+            if (schedule.getStartTime().isBefore(LocalTime.of(9, 0)) || schedule.getStartTime().isAfter(LocalTime.of(18, 0))) {
+                logger.error("Schedule start time should be between 9AM to 6PM");
+                throw new ServiceException("Schedule start time should be between 9AM to 6PM");
+            }
+
+            if (schedule.getEndTime().isBefore(LocalTime.of(9, 0)) || schedule.getEndTime().isAfter(LocalTime.of(18, 0))) {
+                logger.error("Schedule start time should be between 9AM to 6PM");
+                throw new ServiceException("Schedule start time should be between 9AM to 6PM");
+            }
+
+            if (schedule.getScheduleDate().isAfter(LocalDate.now().plusDays(3))) {
+                logger.error("You cannot add schedule for more than 3 days in advance");
+                throw new ServiceException("You cannot add schedule for more than 3 days in advance");
+            }
+
+            if (schedule.getStartTime().isAfter(schedule.getEndTime())) {
+                logger.error("Schedule end time should be after start time");
+                throw new ServiceException("Schedule end time should be after start time");
+            }
+
+            logger.info("Updating schedule " + schedule + " to database");
+            result = scheduleDao.update(schedule);
+            logger.info("Updating schedule " + schedule + " successfully");
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+
+        return result;
     }
 
     @Override

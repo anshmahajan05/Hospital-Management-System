@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface DoctorInterface {
     public boolean addSchedule(ScheduleTbl schedule) throws ServiceException;
-    public HashMap<LocalDate, List<ScheduleDao>> viewSchedule() throws ServiceException;
-    public boolean updateSchedule(ScheduleDao schedule) throws ServiceException;
-    public java.util.HashMap<LocalDate, List<AppointmentTbl>> viewAppointments() throws ServiceException;
+    public HashMap<LocalDate, List<ScheduleTbl>> viewSchedule() throws ServiceException;
+    public boolean updateSchedule(ScheduleTbl schedule) throws ServiceException;
+    public HashMap<LocalDate, List<AppointmentTbl>> viewAppointments() throws ServiceException;
     public AppointmentTbl cancelAppointment(long AppointmentId) throws ServiceException;
     public boolean updateAppointment(AppointmentTbl appointment) throws ServiceException;
 }
