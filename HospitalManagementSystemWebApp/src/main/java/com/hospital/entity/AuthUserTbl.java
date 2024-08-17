@@ -1,5 +1,8 @@
 package com.hospital.entity;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 // table name: auth_user_tbl
 public class AuthUserTbl {
     private long UserId;
@@ -9,20 +12,24 @@ public class AuthUserTbl {
     private String username;
     private String password;
     private String role;
-    private AuthUserTbl addedByUser;
 
-    public AuthUserTbl(long userId, String name, String email, String mobileNo, String username, String password, String role, AuthUserTbl addedByUser) {
-        this.UserId = userId;
+    public AuthUserTbl(long userId, String name, String email, String mobileNo, String username, String password, String role) {
+        UserId = userId;
         this.name = name;
         this.email = email;
         this.mobileNo = mobileNo;
         this.username = username;
-        this.password = password;
+        setPassword(password);
         this.role = role;
-        this.addedByUser = addedByUser;
     }
 
-    public AuthUserTbl(long userId, String name, String email, String mobileNo, AuthUserTbl addedByUser) {
+    public AuthUserTbl(String name, String email, String mobileNo, String username, String password, String role) {
+        this.name = name;
+        this.email = email;
+        this.mobileNo = mobileNo;
+        this.username = username;
+        setPassword(password);
+        this.role = role;
     }
 
     public long getUserId() {
@@ -70,7 +77,30 @@ public class AuthUserTbl {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = hashPassword(password);
+    }
+
+    private String hashPassword(String password) {
+        try {
+            // Create a SHA-256 MessageDigest instance
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            // Perform the hash computation
+            byte[] hashedBytes = digest.digest(password.getBytes());
+
+            // Convert the byte array into a hex string
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashedBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error hashing password", e);
+        }
     }
 
     public String getRole() {
@@ -81,16 +111,16 @@ public class AuthUserTbl {
         this.role = role;
     }
 
-
-    public void add(AuthUserTbl authUserTbl) {
-
-    }
-
-    public AuthUserTbl getAddedByUser() {
-        return addedByUser;
-    }
-
-    public void setAddedByUser(AuthUserTbl addedByUser) {
-        this.addedByUser = addedByUser;
+    @Override
+    public String toString() {
+        return "AuthUserTbl{" +
+                "UserId=" + UserId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", mobileNo='" + mobileNo + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

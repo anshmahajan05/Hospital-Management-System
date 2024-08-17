@@ -18,8 +18,6 @@ public class AuthUserDBDao implements AuthUserDao {
     private Connection conn;
     private final Logger logger = Logger.getLogger(AuthUserDBDao.class);
 
-    private AuthUserDao authUserDao;
-
     public AuthUserDBDao(Connection conn) {
         logger.info("Database Connection " + conn);
         this.conn = conn;
@@ -52,7 +50,7 @@ public class AuthUserDBDao implements AuthUserDao {
         String sqlCommand = "INSERT INTO auth_user_tbl VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             logger.info("SQL Command to be Executed: " + sqlCommand);
-            authUserTbl.setUserId(getMaxId());
+            authUserTbl.setUserId(getMaxId() + 1);
             logger.info("User to be saved: "+ authUserTbl);
 
             try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
@@ -61,6 +59,9 @@ public class AuthUserDBDao implements AuthUserDao {
                 ps.setString(2, authUserTbl.getName());
                 ps.setString(3, authUserTbl.getEmail());
                 ps.setString(4, authUserTbl.getMobileNo());
+                ps.setString(5, authUserTbl.getUsername());
+                ps.setString(6, authUserTbl.getPassword());
+                ps.setString(7, authUserTbl.getRole());
 
                 logger.info("SQL Command to be Executed: " + ps);
 
@@ -84,16 +85,17 @@ public class AuthUserDBDao implements AuthUserDao {
     @Override
     public boolean update(AuthUserTbl authUserTbl) throws DatabaseException {
         boolean result = false;
-        String sqlCommand = "UPDATE auth_user_tbl SET name=?, email=?, mobileNo=? WHERE UserId=? ";
+        String sqlCommand = "UPDATE auth_user_tbl SET name=?, email=?, mobileNo=?, password=?, role=? WHERE UserId=? ";
         logger.info("SQL Command to be Executed: " + sqlCommand);
         logger.info("User to be Updated " + authUserTbl);
 
         try(PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
-            ps.setLong(4, authUserTbl.getUserId());
+            ps.setLong(6, authUserTbl.getUserId());
             ps.setString(1, authUserTbl.getName());
             ps.setString(2, authUserTbl.getEmail());
             ps.setString(3, authUserTbl.getMobileNo());
-
+            ps.setString(4, authUserTbl.getPassword());
+            ps.setString(5, authUserTbl.getRole());
 
             ps.executeUpdate();
             result = true;
@@ -146,17 +148,11 @@ public class AuthUserDBDao implements AuthUserDao {
                 String name = rs.getString("name");
                 String email = rs.getString("email");
                 String mobileNo = rs.getString("mobileNo");
-                long addedByUserId = rs.getLong("addedByUser");
-                AuthUserTbl addedByUser = null;
-                try {
-                    addedByUser = authUserDao.findById(addedByUserId);
-                } catch (Exception e) {
-                    throw new DatabaseException("User not present with id: " + addedByUserId, e);
-                }
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String role = rs.getString("role");
 
-
-                AuthUserTbl authUserTbl;
-                authUserTbl = new AuthUserTbl(userId, name, email, mobileNo, addedByUser);
+                AuthUserTbl authUserTbl = new AuthUserTbl(userId, name, email, mobileNo, username, password, role);
 
                 logger.info("User fetched: " + authUserTbl);
                 authUserTbls.add(authUserTbl);
@@ -185,16 +181,11 @@ public class AuthUserDBDao implements AuthUserDao {
                 String name = rs.getString("name");
                 String email = rs.getString("email");
                 String mobileNo = rs.getString("mobileNo");
-                long addedByUserId = rs.getLong("addedByUser");
-                AuthUserTbl addedByUser = null;
-                try {
-                    addedByUser = authUserDao.findById(addedByUserId);
-                } catch (Exception e) {
-                    throw new DatabaseException("User not present with id: " + addedByUserId, e);
-                }
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                String role = rs.getString("role");
 
-
-                authUserTbl = new AuthUserTbl(UserId, name, email, mobileNo, addedByUser);
+                authUserTbl = new AuthUserTbl(UserId, name, email, mobileNo, username, password, role);
 
                 logger.info("User fetched: " + userId);
             }
@@ -205,6 +196,44 @@ public class AuthUserDBDao implements AuthUserDao {
         }
 
         return authUserTbl;
+    }
+
+    @Override
+    public AuthUserTbl findByUsername(String username) throws DatabaseException {
+        AuthUserTbl authUserTbl = null;
+        String sqlCommand = "SELECT * FROM auth_user_tbl WHERE username = ?";
+        logger.info("SQL Command to be Executed: " + sqlCommand);
+        logger.info("User to be fetched with username: " + username);
+
+        try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
+            ps.setString(1, username);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                long userId = rs.getLong("UserId");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                String mobileNo = rs.getString("mobileNo");
+                String userName = rs.getString("username");
+                String password = rs.getString("password");
+                String role = rs.getString("role");
+
+                authUserTbl = new AuthUserTbl(userId, name, email, mobileNo, userName, password, role);
+
+                logger.info("User fetched: " + userId);
+            }
+        } catch (SQLException e) {
+            logger.error("Could not find the user from the database with username: " + username + " due to error: " + e.getMessage());
+            logger.error(e);
+            throw new DatabaseException(e);
+        }
+
+        return authUserTbl;
+    }
+
+    @Override
+    public AuthUserTbl authenticate(String username, String password) throws DatabaseException {
+        return null;
     }
 
 }

@@ -37,4 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### For Development ###
 /src/main/resources/db.properties
+/log/*
+/src/main/java/com/hospital/test/*

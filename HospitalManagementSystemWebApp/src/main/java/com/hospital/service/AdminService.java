@@ -1,6 +1,7 @@
 package com.hospital.service;
 
 import com.hospital.entity.AuthUserTbl;
+import com.hospital.entity.PatientTbl;
 import com.hospital.exception.DatabaseException;
 import com.hospital.exception.ServiceException;
 import com.hospital.interfaces.AppointmentDao;
@@ -34,5 +35,29 @@ public class AdminService {
         }
 
         return authusers;
+    }
+
+    public List<PatientTbl> getAllPatient() throws ServiceException {
+        List<PatientTbl> patients = null;
+        try {
+            patients = patientDao.findAll();
+        } catch (DatabaseException e) {
+            throw new ServiceException(e);
+        }
+
+        return patients;
+    }
+
+    public boolean addAuthUser(AuthUserTbl authUser) throws ServiceException {
+        boolean result = false;
+        try {
+            if(authUserDao.findByUsername(authUser.getUsername()) != null)
+                throw new ServiceException("User already exists");
+            result = authUserDao.save(authUser);
+        } catch (DatabaseException e) {
+            throw new ServiceException(e);
+        }
+
+        return result;
     }
 }
