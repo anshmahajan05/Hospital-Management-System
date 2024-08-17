@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface AuthUserDao {
 
-    boolean save (AuthUserTbl authUserTbl ) throws Exception;
-    boolean update(AuthUserTbl authUserTbl ) throws Exception;
-    AuthUserTbl delete (long id ) throws Exception;
-    AuthUserTbl findById (long id ) throws Exception;
-    List<AuthUserTbl> findAll () throws Exception;
+    boolean save (AuthUserTbl authUserTbl ) throws DatabaseException;
+    boolean update(AuthUserTbl authUserTbl ) throws DatabaseException;
+    AuthUserTbl delete (long id ) throws DatabaseException;
+    AuthUserTbl findById (long id ) throws DatabaseException;
+    List<AuthUserTbl> findAll () throws DatabaseException;
     public long getMaxId() throws DatabaseException;
 
 }

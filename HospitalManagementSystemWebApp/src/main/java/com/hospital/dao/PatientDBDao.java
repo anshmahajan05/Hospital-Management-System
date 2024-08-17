@@ -46,7 +46,7 @@ public class PatientDBDao implements PatientDao {
 
 
     @Override
-    public boolean save(PatientTbl patient) throws Exception {
+    public boolean save(PatientTbl patient) throws DatabaseException {
         boolean result = false;
         String sqlCommand = "INSERT INTO patient_tbl VALUES (?, ?, ?, ?, ?)";
         try {
@@ -81,7 +81,7 @@ public class PatientDBDao implements PatientDao {
     }
 
     @Override
-    public boolean update(PatientTbl patient) throws Exception {
+    public boolean update(PatientTbl patient) throws DatabaseException {
         boolean result = false;
         String sqlCommand = "UPDATE patient_tbl SET name=?, email=?, mobileNo=?, addedByUser=? WHERE PatientId=? ";
         logger.info("SQL Command to be Executed: " + sqlCommand);
@@ -109,7 +109,7 @@ public class PatientDBDao implements PatientDao {
     }
 
     @Override
-    public PatientTbl delete(long PatientId) throws Exception {
+    public PatientTbl delete(long PatientId) throws DatabaseException {
         PatientTbl patient = null;
         String sqlCommand = "DELETE FROM patient_tbl WHERE PatientId = ?";
         logger.info("SQL Command to be Executed: " + sqlCommand);
@@ -135,7 +135,7 @@ public class PatientDBDao implements PatientDao {
     }
 
     @Override
-    public List<PatientTbl> findAll() throws Exception {
+    public List<PatientTbl> findAll() throws DatabaseException {
         String sqlCommand = "SELECT * FROM patient_tbl";
         logger.info("SQL Command to be Executed: " + sqlCommand);
         List<PatientTbl> patients = new ArrayList<PatientTbl>();
@@ -173,7 +173,7 @@ public class PatientDBDao implements PatientDao {
     }
 
     @Override
-    public PatientTbl findById(long PatientId) throws Exception {
+    public PatientTbl findById(long PatientId) throws DatabaseException {
         PatientTbl patient = null;
         String sqlCommand = "SELECT * FROM patient_tbl WHERE PatientId = ?";
         logger.info("SQL Command to be Executed: " + sqlCommand);

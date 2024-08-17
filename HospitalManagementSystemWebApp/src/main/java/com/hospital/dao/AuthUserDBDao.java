@@ -20,10 +20,9 @@ public class AuthUserDBDao implements AuthUserDao {
 
     private AuthUserDao authUserDao;
 
-    public AuthUserDBDao(Connection conn, AuthUserDao authUserDao) {
+    public AuthUserDBDao(Connection conn) {
         logger.info("Database Connection " + conn);
         this.conn = conn;
-        this.authUserDao = authUserDao;
     }
 
     @Override
@@ -171,7 +170,7 @@ public class AuthUserDBDao implements AuthUserDao {
     }
 
     @Override
-    public AuthUserTbl findById(long UserId) throws Exception {
+    public AuthUserTbl findById(long UserId) throws DatabaseException {
         AuthUserTbl authUserTbl = null;
         String sqlCommand = "SELECT * FROM auth_user_tbl WHERE UserId = ?";
         logger.info("SQL Command to be Executed: " + sqlCommand);

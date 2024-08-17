@@ -175,7 +175,7 @@ public class ScheduleDBDao implements ScheduleDao {
     }
 
     @Override
-    public ScheduleTbl findById(long ScheduleId) throws Exception {
+    public ScheduleTbl findById(long ScheduleId) throws DatabaseException {
         ScheduleTbl schedule = null;
         String sqlCommand = "SELECT * FROM schedule_tbl WHERE ScheduleId = ?";
         logger.info("SQL Command to be Executed: " + sqlCommand);
@@ -190,7 +190,7 @@ public class ScheduleDBDao implements ScheduleDao {
                 AuthUserTbl Doctor = null;
                 try {
                     Doctor = authUserDao.findById(DoctorId);
-                } catch (Exception e) {
+                } catch (DatabaseException e) {
                     throw new DatabaseException("Doctor not present with id: " + DoctorId, e);
                 }
                 LocalDate scheduleDate = rs.getDate("scheduleDate").toLocalDate();

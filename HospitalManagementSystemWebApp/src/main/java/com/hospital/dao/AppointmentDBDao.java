@@ -47,7 +47,7 @@ public class AppointmentDBDao implements AppointmentDao {
     }
 
     @Override
-    public boolean save(AppointmentTbl appointment) throws Exception {
+    public boolean save(AppointmentTbl appointment) throws DatabaseException {
         boolean result = false;
         String sqlCommand = "INSERT INTO appointment_tbl VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
@@ -83,7 +83,7 @@ public class AppointmentDBDao implements AppointmentDao {
     }
 
     @Override
-    public boolean update(AppointmentTbl appointment) throws Exception {
+    public boolean update(AppointmentTbl appointment) throws DatabaseException {
         boolean result = false;
         String sqlCommand = "UPDATE appointment_tbl SET PatientId = ?, ScheduleId = ?, suggestedTests = ?, suggestedMedicines = ?, sufferingFromDisease = ?, appointmentStatus = ? WHERE AppointmentId = ?";
         logger.info("SQL Command to be Executed: " + sqlCommand);
@@ -110,7 +110,7 @@ public class AppointmentDBDao implements AppointmentDao {
     }
 
     @Override
-    public AppointmentTbl delete(long appointmentId) throws Exception {
+    public AppointmentTbl delete(long appointmentId) throws DatabaseException {
         AppointmentTbl appointment = null;
         String sqlCommand = "DELETE FROM appointment_tbl WHERE AppointmentId = ?";
         logger.info("SQL Command to be Executed: " + sqlCommand);
@@ -128,7 +128,7 @@ public class AppointmentDBDao implements AppointmentDao {
                 logger.error(e);
                 throw new DatabaseException(e);
             }
-        } catch (Exception e) {
+        } catch (DatabaseException e) {
             throw new DatabaseException(e);
         }
 
@@ -136,7 +136,7 @@ public class AppointmentDBDao implements AppointmentDao {
     }
 
     @Override
-    public List<AppointmentTbl> findAll() throws Exception {
+    public List<AppointmentTbl> findAll() throws DatabaseException {
         String sqlCommand = "SELECT * FROM appointment_tbl";
         List<AppointmentTbl> appointments = new ArrayList<AppointmentTbl>();
         logger.info("SQL Command to be Executed: " + sqlCommand);
@@ -152,12 +152,12 @@ public class AppointmentDBDao implements AppointmentDao {
                 ScheduleTbl schedule;
                 try {
                     patient = patientDao.findById(patientId);
-                } catch (Exception e) {
+                } catch (DatabaseException e) {
                     throw new DatabaseException("Patient not present with id: " + patientId, e);
                 }
                 try {
                     schedule = scheduleDao.findById(scheduleId);
-                } catch (Exception e) {
+                } catch (DatabaseException e) {
                     throw new DatabaseException("Schedule not present with id: " + scheduleId, e);
                 }
                 String suggestedTests = rs.getString("suggestedTests");
@@ -179,7 +179,7 @@ public class AppointmentDBDao implements AppointmentDao {
     }
 
     @Override
-    public AppointmentTbl findById(long appointmentId) throws Exception {
+    public AppointmentTbl findById(long appointmentId) throws DatabaseException {
         AppointmentTbl appointment = null;
         String sqlCommand = "SELECT * FROM appointment_tbl WHERE AppointmentId = ?";
         logger.info("SQL Command to be Executed: " + sqlCommand);
@@ -196,12 +196,12 @@ public class AppointmentDBDao implements AppointmentDao {
                 ScheduleTbl schedule;
                 try {
                     patient = patientDao.findById(patientId);
-                } catch (Exception e) {
+                } catch (DatabaseException e) {
                     throw new DatabaseException("Patient not present with id: " + patientId, e);
                 }
                 try {
                     schedule = scheduleDao.findById(scheduleId);
-                } catch (Exception e) {
+                } catch (DatabaseException e) {
                     throw new DatabaseException("Schedule not present with id: " + scheduleId, e);
                 }
                 String suggestedTests = rs.getString("suggestedTests");
