@@ -372,13 +372,17 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
         return appointmentsMap;
     }
 
-
     @Override
     public AppointmentTbl cancelAppointment(long AppointmentId) throws ServiceException {
         AppointmentTbl appointment = null;
         logger.info("Service Impl cancelAppointment of AppointmentId: " + AppointmentId);
         try {
             appointment = appointmentDao.findById(AppointmentId);
+            if (appointment == null) {
+                logger.error("Appointment doesnt exist with ID: " + AppointmentId);
+                throw new ServiceException("Appointment doesnt exist with ID: " + AppointmentId);
+            }
+
             logger.info("Appointment to be cancelled: " + appointment);
             appointment.setAppointmentStatus(4);
             appointmentDao.update(appointment);
