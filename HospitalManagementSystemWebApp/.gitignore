@@ -39,6 +39,6 @@ build/
 .DS_Store
 
 ### For Development ###
-/src/main/resources/db.properties
+db.properties
 /log/*
-/src/main/java/com/hospital/test/*
+users.json

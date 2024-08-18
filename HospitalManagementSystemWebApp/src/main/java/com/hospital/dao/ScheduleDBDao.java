@@ -139,7 +139,7 @@ public class ScheduleDBDao implements ScheduleDao {
 
     @Override
     public List<ScheduleTbl> findAll() throws DatabaseException {
-        String sqlCommand = "SELECT * FROM schedule_tbl";
+        String sqlCommand = "SELECT * FROM schedule_tbl ORDER BY scheduleDate ASC, StartTime ASC, EndTime ASC";
         List<ScheduleTbl> schedules = new ArrayList<ScheduleTbl>();
         logger.info("SQL Command to be Executed: " + sqlCommand);
 
@@ -251,7 +251,7 @@ public class ScheduleDBDao implements ScheduleDao {
     @Override
     public List<ScheduleTbl> findByStartEndDate(LocalDate startDate, LocalDate endDate) throws DatabaseException {
         List<ScheduleTbl> schedules = new ArrayList<ScheduleTbl>();
-        String sqlCommand = "SELECT * FROM schedule_tbl WHERE scheduleDate BETWEEN ? AND ?";
+        String sqlCommand = "SELECT * FROM schedule_tbl WHERE scheduleDate BETWEEN ? AND ? ORDER BY scheduleDate ASC, StartTime ASC, EndTime ASC";
         logger.info("SQL Command to be executed: " + sqlCommand);
 
         try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {

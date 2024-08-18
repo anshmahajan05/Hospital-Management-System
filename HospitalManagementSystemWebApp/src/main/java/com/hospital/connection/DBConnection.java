@@ -18,14 +18,12 @@ public class DBConnection {
         if(connection == null) {
             logger.info("Connecting to database...");
             try(InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties")) {
-                logger.info("Loading properties from file..." + input);
                 if(input == null) {
                     throw new DatabaseException("db properties not found");
                 }
 
                 Properties properties = new Properties();
                 properties.load(input);
-                logger.info("Loading properties from file..." + properties);
                 String url = properties.getProperty("url");
                 String user = properties.getProperty("user");
                 String password = properties.getProperty("password");

@@ -12,26 +12,26 @@ import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 
-public class HospitalFactory {
+public class HospitalDAOFactory {
     private static AuthUserDao authUserDao = null;
     private static PatientDao patientDao = null;
     private static ScheduleDao scheduleDao = null;
     private static AppointmentDao appointmentDao = null;
 
-    private static HospitalFactory hospitalFactory = null;
+    private static HospitalDAOFactory hospitalFactory = null;
 
     private Connection conn = null;
 
-    private static Logger logger = Logger.getLogger(HospitalFactory.class);
+    private static Logger logger = Logger.getLogger(HospitalDAOFactory.class);
 
-    private HospitalFactory(Connection conn) {
+    private HospitalDAOFactory(Connection conn) {
         this.conn = conn;
     }
 
-    public static HospitalFactory getHospitalFactory(Connection conn) {
+    public static HospitalDAOFactory getHospitalFactory(Connection conn) {
         logger.info("Getting Hospital Factory instance: " + hospitalFactory);
         if (hospitalFactory == null) {
-            hospitalFactory = new HospitalFactory(conn);
+            hospitalFactory = new HospitalDAOFactory(conn);
             logger.info("Getting new Hospital Factory : " + hospitalFactory);
         }
 
