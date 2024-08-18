@@ -15,6 +15,7 @@ public interface AppointmentDao {
     public List<AppointmentTbl> findAll() throws DatabaseException;
     public AppointmentTbl findById(long AppointmentId) throws DatabaseException;
     public long getMaxId() throws DatabaseException;
+    // To - do
     public AppointmentTbl findBySchedule(ScheduleTbl schedule) throws DatabaseException;
     public List<AppointmentTbl> findByStartEndDate(LocalDate startDate, LocalDate endDate) throws DatabaseException;
 }

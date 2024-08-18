@@ -2,16 +2,14 @@ package com.hospital.dao;
 
 import com.hospital.entity.AuthUserTbl;
 import com.hospital.interfaces.AuthUserDao;
-
 import java.util.List;
-
 import java.sql.*;
-
 import com.hospital.exception.DatabaseException;
 import org.apache.log4j.Logger;
-
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+
+import static com.hospital.hashing.Hash.hashPassword;
 
 public class AuthUserDBDao implements AuthUserDao {
 
@@ -237,7 +235,15 @@ public class AuthUserDBDao implements AuthUserDao {
     // for example see setPassword of AuthUserTbl
     @Override
     public AuthUserTbl authenticate(String username, String password) throws DatabaseException {
-        return null;
+        AuthUserTbl authuser = findByUsername(username);
+        if (authuser == null) {
+            throw new DatabaseException("Invalid Username or Password");
+        }
+        String hashCode = hashPassword(password);
+        if (!authuser.getPassword().equals(hashCode)) {
+            throw new DatabaseException("Invalid username or Password");
+        }
+        return authuser;
     }
 
 }

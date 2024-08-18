@@ -14,6 +14,5 @@ public interface AuthUserDao {
     List<AuthUserTbl> findAll () throws DatabaseException;
     public long getMaxId() throws DatabaseException;
     public AuthUserTbl findByUsername (String username) throws DatabaseException;
-    // TO DO TASKS: to be implemented by Anushka
     public AuthUserTbl authenticate(String username, String password) throws DatabaseException;
 }
