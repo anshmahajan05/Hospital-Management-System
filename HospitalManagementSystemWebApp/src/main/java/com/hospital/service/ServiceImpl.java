@@ -130,9 +130,15 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
         boolean result = false;
 
         try {
-            if(authUserDao.findById(schedule.getDoctor().getUserId()) == null) {
+            AuthUserTbl user = authUserDao.findById(schedule.getDoctor().getUserId());
+            if(user == null) {
                 logger.error("Doctor with id " + schedule.getDoctor().getUserId() + " not found");
                 throw new ServiceException("Doctor with id " + schedule.getDoctor().getUserId() + " not found");
+            }
+
+            if (user.getRole().equalsIgnoreCase("Doctor")) {
+                logger.error("User is not a doctor");
+                throw new ServiceException("User is not a doctor");
             }
 
             if(scheduleDao.findByDetails(schedule.getScheduleDate(), schedule.getStartTime(), schedule.getEndTime()) != null) {
