@@ -226,11 +226,97 @@ public class AppointmentDBDao implements AppointmentDao {
 
     @Override
     public AppointmentTbl findBySchedule(ScheduleTbl schedule) throws DatabaseException {
-        return null;
+        AppointmentTbl appointment = null;
+        String sqlCommand = "SELECT * FROM appointment_tbl WHERE ScheduleId = ?";
+        logger.info("SQL Command to be Executed: " + sqlCommand);
+        logger.info("Fetching appointment associated with Schedule ID: " + schedule.getScheduleId());
+
+        try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
+            ps.setLong(1, schedule.getScheduleId());
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                long appointmentId = rs.getLong("AppointmentId");
+                long patientId = rs.getLong("PatientId");
+
+                PatientTbl patient;
+                try {
+                    patient = patientDao.findById(patientId);
+                } catch (DatabaseException e) {
+                    throw new DatabaseException("Patient not found with ID: " + patientId, e);
+                }
+
+                String suggestedTests = rs.getString("suggestedTests");
+                String suggestedMedicines = rs.getString("suggestedMedicines");
+                String sufferingFromDisease = rs.getString("sufferingFromDisease");
+                int appointmentStatus = rs.getInt("appointmentStatus");
+
+                appointment = new AppointmentTbl(appointmentId, patient, schedule, suggestedTests, suggestedMedicines, sufferingFromDisease, appointmentStatus);
+                logger.info("Appointment found: " + appointment);
+                return appointment;
+            }
+        }
+
+        catch (SQLException e) {
+            logger.error("Could not find the appointment from the database with schedule ID: " + schedule.getScheduleId() + " due to error: " + e.getMessage());
+            logger.error(e);
+            throw new DatabaseException(e);
+        }
+        return  appointment;
     }
 
     @Override
     public List<AppointmentTbl> findByStartEndDate(LocalDate startDate, LocalDate endDate) throws DatabaseException {
-        return List.of();
+        List<AppointmentTbl> appointments = new ArrayList<>();
+
+        List<ScheduleTbl> schedules = scheduleDao.findByStartEndDate(startDate, endDate);
+
+        if (schedules.isEmpty()) {
+            logger.info("No schedules found between dates: " + startDate + " and " + endDate);
+            return appointments;
+        }
+
+        String sqlCommand = "SELECT * FROM appointment_tbl WHERE ScheduleId = ?";
+        logger.info("SQL Command to be executed for each schedule: " + sqlCommand);
+
+        try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
+            for (ScheduleTbl schedule : schedules) {
+                ps.setLong(1, schedule.getScheduleId());
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        long appointmentId = rs.getLong("AppointmentId");
+                        long patientId = rs.getLong("PatientId");
+
+                        PatientTbl patient;
+                        try {
+                            patient = patientDao.findById(patientId);
+                        } catch (Exception e) {
+                            throw new DatabaseException("Patient not found with ID: " + patientId, e);
+                        }
+
+                        String suggestedTests = rs.getString("suggestedTests");
+                        String suggestedMedicines = rs.getString("suggestedMedicines");
+                        String sufferingFromDisease = rs.getString("sufferingFromDisease");
+                        int appointmentStatus = rs.getInt("appointmentStatus");
+
+                        AppointmentTbl appointment = new AppointmentTbl(
+                                appointmentId, patient, schedule, suggestedTests,
+                                suggestedMedicines, sufferingFromDisease, appointmentStatus
+                        );
+
+                        logger.info("Appointment fetched: " + appointment);
+                        appointments.add(appointment);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("SQL Error: " + e.getMessage());
+            logger.error(e);
+            throw new DatabaseException(e);
+        }
+
+        return appointments;
     }
+
 }
