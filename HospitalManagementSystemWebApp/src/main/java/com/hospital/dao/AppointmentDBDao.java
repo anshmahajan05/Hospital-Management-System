@@ -11,6 +11,8 @@ import com.hospital.interfaces.ScheduleDao;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -220,5 +222,15 @@ public class AppointmentDBDao implements AppointmentDao {
         }
 
         return appointment;
+    }
+
+    @Override
+    public AppointmentTbl findBySchedule(ScheduleTbl schedule) throws DatabaseException {
+        return null;
+    }
+
+    @Override
+    public List<AppointmentTbl> findByStartEndDate(LocalDate startDate, LocalDate endDate) throws DatabaseException {
+        return List.of();
     }
 }

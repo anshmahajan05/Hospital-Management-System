@@ -2,6 +2,8 @@ package com.hospital.entity;
 
 import com.hospital.hashing.Hash;
 
+import java.util.Objects;
+
 // table name: auth_user_tbl
 public class AuthUserTbl {
     private long UserId;
@@ -112,5 +114,18 @@ public class AuthUserTbl {
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AuthUserTbl)) return false;
+        AuthUserTbl that = (AuthUserTbl) o;
+        return UserId == that.UserId && Objects.equals(name, that.name) && Objects.equals(email, that.email) && Objects.equals(mobileNo, that.mobileNo) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(role, that.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(UserId, name, email, mobileNo, username, password, role);
     }
 }

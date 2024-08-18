@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
         this.appointmentDao = appointmentDao;
         logger.info("ServiceImpl constructor created");
     }
+
     @Override
     public List<AuthUserTbl> getAllAuthUser(String role) throws ServiceException {
         logger.info("ServiceImpl getAllAuthUser of role " + role);
@@ -181,8 +183,64 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
     }
 
     @Override
+    public HashMap<LocalDate, List<ScheduleTbl>> viewSchedule(AuthUserTbl Doctor) throws ServiceException {
+        logger.info("Service Impl viewSchedule of Doctor: " + Doctor);
+        HashMap<LocalDate, List<ScheduleTbl>> schedulesMap = new HashMap<LocalDate, List<ScheduleTbl>>();
+        try {
+            List<ScheduleTbl> scheduleList = scheduleDao.findByStartEndDate(LocalDate.now(), LocalDate.now().plusDays(3));
+            scheduleList = scheduleList.stream().filter(s -> s.getDoctor().equals(Doctor)).collect(Collectors.toList());
+            logger.info("Schedule to be fetch for next 3 days: " + scheduleList);
+            for (ScheduleTbl schedule : scheduleList) {
+                logger.info("Adding schedule " + schedule + " to Date wise map");
+                if (schedulesMap.get(schedule.getScheduleDate()) == null) {
+                    // if schedule date is not listed yet
+                    List<ScheduleTbl> s = new ArrayList<ScheduleTbl>();
+                    s.add(schedule);
+                    schedulesMap.put(schedule.getScheduleDate(), s);
+                } else {
+                    // if schedule date is already there in map
+                    List<ScheduleTbl> s = schedulesMap.get(schedule.getScheduleDate());
+                    s.add(schedule);
+                    schedulesMap.put(schedule.getScheduleDate(), s);
+                }
+            }
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+
+        return schedulesMap;
+    }
+
+    @Override
     public HashMap<LocalDate, List<ScheduleTbl>> viewSchedule() throws ServiceException {
-        return null;
+        logger.info("Service Impl viewSchedule of Doctors");
+        HashMap<LocalDate, List<ScheduleTbl>> schedulesMap = new HashMap<LocalDate, List<ScheduleTbl>>();
+        try {
+            List<ScheduleTbl> scheduleList = scheduleDao.findByStartEndDate(LocalDate.now(), LocalDate.now().plusDays(3));
+            logger.info("Schedule to be fetch for next 3 days: " + scheduleList);
+            for (ScheduleTbl schedule : scheduleList) {
+                logger.info("Adding schedule " + schedule + " to Date wise map");
+                if (schedulesMap.get(schedule.getScheduleDate()) == null) {
+                    // if schedule date is not listed yet
+                    List<ScheduleTbl> s = new ArrayList<ScheduleTbl>();
+                    s.add(schedule);
+                    schedulesMap.put(schedule.getScheduleDate(), s);
+                } else {
+                    // if schedule date is already there in map
+                    List<ScheduleTbl> s = schedulesMap.get(schedule.getScheduleDate());
+                    s.add(schedule);
+                    schedulesMap.put(schedule.getScheduleDate(), s);
+                }
+            }
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+
+        return schedulesMap;
     }
 
     @Override
@@ -234,6 +292,13 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
                 throw new ServiceException("Schedule end time should be after start time");
             }
 
+            AppointmentTbl appointmentExists = appointmentDao.findBySchedule(schedule);
+            if (appointmentExists != null) {
+                logger.error("Appointment already booked for this schedule: " + appointmentExists);
+                logger.info("Cancelling the Appointment");
+                cancelAppointment(appointmentExists.getAppointmentId());
+            }
+
             logger.info("Updating schedule " + schedule + " to database");
             result = scheduleDao.update(schedule);
             logger.info("Updating schedule " + schedule + " successfully");
@@ -247,18 +312,89 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
     }
 
     @Override
-    public HashMap<LocalDate, List<AppointmentTbl>> viewAppointments() throws ServiceException {
-        return null;
+    public HashMap<LocalDate, List<AppointmentTbl>> viewAppointments(AuthUserTbl Doctor) throws ServiceException {
+        logger.info("Service Impl viewAppointment of Doctor: " + Doctor);
+        HashMap<LocalDate, List<AppointmentTbl>> appointmentsMap = new HashMap<LocalDate, List<AppointmentTbl>>();
+
+        try {
+            List<AppointmentTbl> appointmentList = appointmentDao.findByStartEndDate(LocalDate.now(), LocalDate.now().plusDays(3));
+
+            appointmentList = appointmentList.stream().filter(
+                    a -> a.getSchedule().getDoctor().equals(Doctor)
+            ).collect(Collectors.toList());
+
+            logger.info("Found " + appointmentList.size() + " appointments");
+            for (AppointmentTbl appointment : appointmentList) {
+                logger.info("Adding appointment " + appointment + " to daywise map");
+                if (appointmentsMap.get(appointment.getSchedule().getScheduleDate()) == null) {
+                    List<AppointmentTbl> a = new ArrayList<AppointmentTbl>();
+                    a.add(appointment);
+                    appointmentsMap.put(appointment.getSchedule().getScheduleDate(), a);
+                } else {
+                    List<AppointmentTbl> a = appointmentsMap.get(appointment.getSchedule().getScheduleDate());
+                    a.add(appointment);
+                    appointmentsMap.put(appointment.getSchedule().getScheduleDate(), a);
+                }
+            }
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+        return appointmentsMap;
     }
+
+    @Override
+    public HashMap<LocalDate, List<AppointmentTbl>> viewAppointments() throws ServiceException {
+        logger.info("Service Impl viewAppointment of Doctors ");
+        HashMap<LocalDate, List<AppointmentTbl>> appointmentsMap = new HashMap<LocalDate, List<AppointmentTbl>>();
+
+        try {
+            List<AppointmentTbl> appointmentList = appointmentDao.findByStartEndDate(LocalDate.now(), LocalDate.now().plusDays(3));
+            logger.info("Found " + appointmentList.size() + " appointments");
+            for (AppointmentTbl appointment : appointmentList) {
+                logger.info("Adding appointment " + appointment + " to daywise map");
+                if (appointmentsMap.get(appointment.getSchedule().getScheduleDate()) == null) {
+                    List<AppointmentTbl> a = new ArrayList<AppointmentTbl>();
+                    a.add(appointment);
+                    appointmentsMap.put(appointment.getSchedule().getScheduleDate(), a);
+                } else {
+                    List<AppointmentTbl> a = appointmentsMap.get(appointment.getSchedule().getScheduleDate());
+                    a.add(appointment);
+                    appointmentsMap.put(appointment.getSchedule().getScheduleDate(), a);
+                }
+            }
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+        return appointmentsMap;
+    }
+
 
     @Override
     public AppointmentTbl cancelAppointment(long AppointmentId) throws ServiceException {
-        return null;
-    }
+        AppointmentTbl appointment = null;
+        logger.info("Service Impl cancelAppointment of AppointmentId: " + AppointmentId);
+        try {
+            appointment = appointmentDao.findById(AppointmentId);
+            logger.info("Appointment to be cancelled: " + appointment);
+            appointment.setAppointmentStatus(4);
+            appointmentDao.update(appointment);
+            logger.info("Appointment cancelled: " + appointment);
+            ScheduleTbl schedule = appointment.getSchedule();
+            logger.info("Schedule to be Updated now: " + schedule);
+            schedule.setScheduleStatus(1);
+            scheduleDao.update(schedule);
+            logger.info("Schedule Updated now: " + schedule);
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e);
+        }
 
-    @Override
-    public boolean updateAppointment(AppointmentTbl appointment) throws ServiceException {
-        return false;
+        return appointment;
     }
 
     @Override
