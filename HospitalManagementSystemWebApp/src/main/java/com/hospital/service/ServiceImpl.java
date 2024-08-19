@@ -481,22 +481,70 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
 
     @Override
     public AuthUserTbl searchUser(long id) throws ServiceException {
-        return null;
+        AuthUserTbl result;
+        logger.info("Searching user with id:"+id);
+        try {
+            result = authUserDao.findById(id);
+            if(result==null){
+                throw new ServiceException("User doesn't exist with ID: " + id);
+            }
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e.getMessage());
+        }
+        return result;
     }
 
     @Override
     public PatientTbl searchPatient(long id) throws ServiceException {
-        return null;
+        PatientTbl result;
+        logger.info("Searching patient with id:"+id);
+        try {
+            result = patientDao.findById(id);
+            if(result==null){
+                throw new ServiceException("Patient doesn't exist with ID: " + id);
+            }
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e.getMessage());
+        }
+        return result;
     }
 
     @Override
     public ScheduleTbl searchSchedule(long id) throws ServiceException {
-        return null;
+        ScheduleTbl result;
+        logger.info("Searching schedule with id:"+id);
+        try {
+            result = scheduleDao.findById(id);
+            if(result==null){
+                throw new ServiceException("Schedule doesn't exist with ID: " + id);
+            }
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e.getMessage());
+        }
+        return result;
     }
 
     @Override
     public AppointmentTbl searchAppointment(long id) throws ServiceException {
-        return null;
+        AppointmentTbl result;
+        logger.info("Searching appointment with id:"+id);
+        try {
+            result = appointmentDao.findById(id);
+            if(result==null){
+                throw new ServiceException("Appointment doesnt exist with ID: " + id);
+            }
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e.getMessage());
+        }
+        return result;
     }
 
     @Override
