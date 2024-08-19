@@ -1,5 +1,9 @@
 package com.hospital.entity;
 
+import com.hospital.hashing.Hash;
+
+import java.util.Objects;
+
 // table name: auth_user_tbl
 public class AuthUserTbl {
     private long UserId;
@@ -11,13 +15,36 @@ public class AuthUserTbl {
     private String role;
 
     public AuthUserTbl(long userId, String name, String email, String mobileNo, String username, String password, String role) {
-        this.UserId = userId;
+        UserId = userId;
         this.name = name;
         this.email = email;
         this.mobileNo = mobileNo;
         this.username = username;
-        this.password = password;
+        setPassword(password);
         this.role = role;
+    }
+
+    public AuthUserTbl(String name, String email, String mobileNo, String username, String password, String role) {
+        this.name = name;
+        this.email = email;
+        this.mobileNo = mobileNo;
+        this.username = username;
+        setPassword(password);
+        this.role = role;
+    }
+
+    public AuthUserTbl(long userId, String name, String email, String mobileNo, String role) {
+        UserId = userId;
+        this.name = name;
+        this.email = email;
+        this.mobileNo = mobileNo;
+        this.role = role;
+    }
+
+    public AuthUserTbl(String username, String password, long userId) {
+        this.username = username;
+        setPassword(password);
+        UserId = userId;
     }
 
     public long getUserId() {
@@ -65,7 +92,7 @@ public class AuthUserTbl {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = Hash.hashPassword(password);
     }
 
     public String getRole() {
@@ -87,5 +114,18 @@ public class AuthUserTbl {
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AuthUserTbl)) return false;
+        AuthUserTbl that = (AuthUserTbl) o;
+        return UserId == that.UserId && Objects.equals(name, that.name) && Objects.equals(email, that.email) && Objects.equals(mobileNo, that.mobileNo) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(role, that.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(UserId, name, email, mobileNo, username, password, role);
     }
 }

@@ -52,7 +52,7 @@ public class ScheduleDBDao implements ScheduleDao {
         String sqlCommand = "INSERT INTO schedule_tbl VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             logger.info("SQL Command to be Executed: " + sqlCommand);
-            schedule.setScheduleId(getMaxId());
+            schedule.setScheduleId(getMaxId() + 1);
             logger.info("Schedule to be saved: "+ schedule);
 
             try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {
@@ -139,7 +139,7 @@ public class ScheduleDBDao implements ScheduleDao {
 
     @Override
     public List<ScheduleTbl> findAll() throws DatabaseException {
-        String sqlCommand = "SELECT * FROM schedule_tbl";
+        String sqlCommand = "SELECT * FROM schedule_tbl ORDER BY scheduleDate ASC, StartTime ASC, EndTime ASC";
         List<ScheduleTbl> schedules = new ArrayList<ScheduleTbl>();
         logger.info("SQL Command to be Executed: " + sqlCommand);
 
@@ -175,7 +175,7 @@ public class ScheduleDBDao implements ScheduleDao {
     }
 
     @Override
-    public ScheduleTbl findById(long ScheduleId) throws Exception {
+    public ScheduleTbl findById(long ScheduleId) throws DatabaseException {
         ScheduleTbl schedule = null;
         String sqlCommand = "SELECT * FROM schedule_tbl WHERE ScheduleId = ?";
         logger.info("SQL Command to be Executed: " + sqlCommand);
@@ -190,7 +190,7 @@ public class ScheduleDBDao implements ScheduleDao {
                 AuthUserTbl Doctor = null;
                 try {
                     Doctor = authUserDao.findById(DoctorId);
-                } catch (Exception e) {
+                } catch (DatabaseException e) {
                     throw new DatabaseException("Doctor not present with id: " + DoctorId, e);
                 }
                 LocalDate scheduleDate = rs.getDate("scheduleDate").toLocalDate();
@@ -251,7 +251,7 @@ public class ScheduleDBDao implements ScheduleDao {
     @Override
     public List<ScheduleTbl> findByStartEndDate(LocalDate startDate, LocalDate endDate) throws DatabaseException {
         List<ScheduleTbl> schedules = new ArrayList<ScheduleTbl>();
-        String sqlCommand = "SELECT * FROM schedule_tbl WHERE scheduleDate BETWEEN ? AND ?";
+        String sqlCommand = "SELECT * FROM schedule_tbl WHERE scheduleDate BETWEEN ? AND ? ORDER BY scheduleDate ASC, StartTime ASC, EndTime ASC";
         logger.info("SQL Command to be executed: " + sqlCommand);
 
         try (PreparedStatement ps = conn.prepareStatement(sqlCommand)) {

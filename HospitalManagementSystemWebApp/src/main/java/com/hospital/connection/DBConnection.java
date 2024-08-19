@@ -11,21 +11,19 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DBConnection {
-    private final Logger logger = Logger.getLogger(DBConnection.class);
+    private static final Logger logger = Logger.getLogger(DBConnection.class);
     private static Connection connection = null;
 
-    public Connection getDBConnection() throws DatabaseException {
+    public static Connection getDBConnection() throws DatabaseException {
         if(connection == null) {
             logger.info("Connecting to database...");
-            try(InputStream input = getClass().getClassLoader().getResourceAsStream("db.properties")) {
-                logger.info("Loading properties from file...");
+            try(InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties")) {
                 if(input == null) {
                     throw new DatabaseException("db properties not found");
                 }
 
                 Properties properties = new Properties();
                 properties.load(input);
-
                 String url = properties.getProperty("url");
                 String user = properties.getProperty("user");
                 String password = properties.getProperty("password");

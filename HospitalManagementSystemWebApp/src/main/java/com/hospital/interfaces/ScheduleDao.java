@@ -8,12 +8,12 @@ import java.time.LocalTime;
 import java.util.List;
 
 public interface ScheduleDao {
-    public long getMaxId() throws Exception;
-    public boolean save(ScheduleTbl schedule) throws Exception;
-    public boolean update(ScheduleTbl schedule) throws Exception;
-    public ScheduleTbl delete(long ScheduleId) throws Exception;
-    public List<ScheduleTbl> findAll() throws Exception;
-    public ScheduleTbl findById(long ScheduleId) throws Exception;
-    public ScheduleTbl findByDetails(LocalDate scheduleDate, LocalTime startTime, LocalTime endTime) throws Exception;
-    public List<ScheduleTbl> findByStartEndDate(LocalDate startDate, LocalDate endDate) throws Exception;
+    public long getMaxId() throws DatabaseException;
+    public boolean save(ScheduleTbl schedule) throws DatabaseException;
+    public boolean update(ScheduleTbl schedule) throws DatabaseException;
+    public ScheduleTbl delete(long ScheduleId) throws DatabaseException;
+    public List<ScheduleTbl> findAll() throws DatabaseException;
+    public ScheduleTbl findById(long ScheduleId) throws DatabaseException;
+    public ScheduleTbl findByDetails(LocalDate scheduleDate, LocalTime startTime, LocalTime endTime) throws DatabaseException;
+    public List<ScheduleTbl> findByStartEndDate(LocalDate startDate, LocalDate endDate) throws DatabaseException;
 }

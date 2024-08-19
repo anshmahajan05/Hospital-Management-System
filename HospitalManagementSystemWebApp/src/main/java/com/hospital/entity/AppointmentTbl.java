@@ -2,7 +2,7 @@ package com.hospital.entity;
 
 // table name: appointment_tbl
 public class AppointmentTbl {
-    private int AppointmentId;
+    private long AppointmentId;
     private PatientTbl patient;
     private ScheduleTbl schedule;
     private String suggestedTests;
@@ -10,7 +10,7 @@ public class AppointmentTbl {
     private String sufferingFromDisease;
     private int appointmentStatus;
 
-    public AppointmentTbl(int appointmentId, PatientTbl patient, ScheduleTbl schedule, String suggestedTests, String suggestedMedicines, String sufferingFromDisease, int appointmentStatus) {
+    public AppointmentTbl(long appointmentId, PatientTbl patient, ScheduleTbl schedule, String suggestedTests, String suggestedMedicines, String sufferingFromDisease, int appointmentStatus) {
         AppointmentId = appointmentId;
         this.patient = patient;
         this.schedule = schedule;
@@ -20,18 +20,69 @@ public class AppointmentTbl {
         this.appointmentStatus = appointmentStatus;
     }
 
-    public AppointmentTbl(int appointmentId, PatientTbl patient, ScheduleTbl schedule, int appointmentStatus) {
+    public AppointmentTbl(long appointmentId, PatientTbl patient, ScheduleTbl schedule, int appointmentStatus) {
         AppointmentId = appointmentId;
         this.patient = patient;
         this.schedule = schedule;
         this.appointmentStatus = appointmentStatus;
     }
 
-    public int getAppointmentId() {
+    public AppointmentTbl(long appointmentId, PatientTbl patient, ScheduleTbl schedule, String suggestedTests, int appointmentStatus) {
+        AppointmentId = appointmentId;
+        this.patient = patient;
+        this.schedule = schedule;
+        this.suggestedTests = suggestedTests;
+        this.appointmentStatus = appointmentStatus;
+    }
+
+    public AppointmentTbl(PatientTbl patient, long appointmentId, ScheduleTbl schedule, int appointmentStatus, String suggestedMedicines) {
+        this.patient = patient;
+        AppointmentId = appointmentId;
+        this.schedule = schedule;
+        this.appointmentStatus = appointmentStatus;
+        this.suggestedMedicines = suggestedMedicines;
+    }
+
+    public AppointmentTbl(long appointmentId, PatientTbl patient, ScheduleTbl schedule, int appointmentStatus, String sufferingFromDisease) {
+        AppointmentId = appointmentId;
+        this.patient = patient;
+        this.schedule = schedule;
+        this.appointmentStatus = appointmentStatus;
+        this.sufferingFromDisease = sufferingFromDisease;
+    }
+
+    public AppointmentTbl(long appointmentId, PatientTbl patient, ScheduleTbl schedule, int appointmentStatus, String suggestedTests, String suggestedMedicines) {
+        AppointmentId = appointmentId;
+        this.patient = patient;
+        this.schedule = schedule;
+        this.appointmentStatus = appointmentStatus;
+        this.suggestedTests = suggestedTests;
+        this.suggestedMedicines = suggestedMedicines;
+    }
+
+    public AppointmentTbl(long appointmentId, int appointmentStatus, PatientTbl patient, ScheduleTbl schedule, String sufferingFromDisease, String suggestedTests) {
+        AppointmentId = appointmentId;
+        this.appointmentStatus = appointmentStatus;
+        this.patient = patient;
+        this.schedule = schedule;
+        this.sufferingFromDisease = sufferingFromDisease;
+        this.suggestedTests = suggestedTests;
+    }
+
+    public AppointmentTbl(long appointmentId, PatientTbl patient, ScheduleTbl schedule, String suggestedMedicines, String sufferingFromDisease, int appointmentStatus) {
+        AppointmentId = appointmentId;
+        this.patient = patient;
+        this.schedule = schedule;
+        this.suggestedMedicines = suggestedMedicines;
+        this.sufferingFromDisease = sufferingFromDisease;
+        this.appointmentStatus = appointmentStatus;
+    }
+
+    public long getAppointmentId() {
         return AppointmentId;
     }
 
-    public void setAppointmentId(int appointmentId) {
+    public void setAppointmentId(long appointmentId) {
         AppointmentId = appointmentId;
     }
 
