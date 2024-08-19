@@ -136,7 +136,7 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
                 throw new ServiceException("Doctor with id " + schedule.getDoctor().getUserId() + " not found");
             }
 
-            if (user.getRole().equalsIgnoreCase("Doctor")) {
+            if (!user.getRole().equalsIgnoreCase("Doctor")) {
                 logger.error("User is not a doctor");
                 throw new ServiceException("User is not a doctor");
             }
@@ -185,7 +185,28 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
 
     @Override
     public boolean addPatient(PatientTbl patient) throws ServiceException {
-        return false;
+
+        logger.info("ServiceImpl addPatient of Patient with name " + patient.getName() );
+        boolean result = false;
+
+        try {
+            if(patient.getPatientId()!=0){
+                AuthUserTbl user = authUserDao.findById(patient.getPatientId());
+                if(user == null) {
+                    logger.error("Patient with id " + patient.getPatientId() + " already exists");
+                    throw new ServiceException("Patient with id " + patient.getPatientId() + " already exists");
+                }
+            }
+            logger.info("Adding patient " + patient + " to database");
+            result = patientDao.save(patient);
+            logger.info("Added patient " + patient + " successfully");
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+
+        return result;
     }
 
     @Override
@@ -251,7 +272,24 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
 
     @Override
     public boolean bookAppointment(AppointmentTbl appointment) throws ServiceException {
-        return false;
+        boolean result = false;
+        try {
+            if(appointmentDao.findBySchedule(appointment.getSchedule())!=null){
+                logger.info("Appointment with id : "+appointment.getAppointmentId()+" already exists");
+                throw new ServiceException("Appointment already exists");
+            }
+
+            else{
+                logger.info("Adding appointment " + appointment + " to database");
+                result = appointmentDao.save(appointment);
+                logger.info("Added appointment " + appointment + " successfully");
+            }
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e.getMessage());
+        }
+        return result;
     }
 
     @Override
