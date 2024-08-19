@@ -14,5 +14,5 @@ public interface DoctorInterface {
     public HashMap<LocalDate, List<ScheduleTbl>> viewSchedule(AuthUserTbl Doctor) throws ServiceException;
     public boolean updateSchedule(ScheduleTbl schedule) throws ServiceException;
     public HashMap<LocalDate, List<AppointmentTbl>> viewAppointments(AuthUserTbl Doctor) throws ServiceException;
-    public AppointmentTbl cancelAppointment(long AppointmentId) throws ServiceException;
+    public AppointmentTbl cancelAppointment(long AppointmentId, AuthUserTbl Doctor) throws ServiceException;
 }

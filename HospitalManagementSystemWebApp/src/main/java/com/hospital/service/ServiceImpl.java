@@ -446,6 +446,60 @@ public class ServiceImpl implements LoginInterface, AdminInterface, DoctorInterf
     }
 
     @Override
+    public AppointmentTbl cancelAppointment(long AppointmentId, AuthUserTbl Doctor) throws ServiceException {
+        AppointmentTbl appointment = null;
+        logger.info("Service Impl cancelAppointment of AppointmentId: " + AppointmentId + " of Doctor: " + Doctor);
+        try {
+            appointment = appointmentDao.findById(AppointmentId);
+            if (appointment == null) {
+                logger.error("Appointment doesnt exist with ID: " + AppointmentId);
+                throw new ServiceException("Appointment doesnt exist with ID: " + AppointmentId);
+            }
+
+            if (!appointment.getSchedule().getDoctor().equals(Doctor)) {
+                logger.error("Unauthoried access to cancel the Appointment: " + appointment + " by Doctor: " + Doctor);
+                throw new ServiceException("Unauthoried access to cancel the Appointment: " + appointment + " by Doctor: " + Doctor);
+            }
+
+            logger.info("Appointment to be cancelled: " + appointment);
+            appointment.setAppointmentStatus(4);
+            appointmentDao.update(appointment);
+            logger.info("Appointment cancelled: " + appointment);
+            ScheduleTbl schedule = appointment.getSchedule();
+            logger.info("Schedule to be Updated now: " + schedule);
+            schedule.setScheduleStatus(1);
+            scheduleDao.update(schedule);
+            logger.info("Schedule Updated now: " + schedule);
+        } catch (DatabaseException e) {
+            logger.error("Error Occured at Service Layer: " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e);
+        }
+
+        return appointment;
+    }
+
+    @Override
+    public AuthUserTbl searchUser(long id) throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public PatientTbl searchPatient(long id) throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public ScheduleTbl searchSchedule(long id) throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public AppointmentTbl searchAppointment(long id) throws ServiceException {
+        return null;
+    }
+
+    @Override
     public AuthUserTbl login(String username, String password) throws ServiceException {
         AuthUserTbl authUser = null;
         logger.info("Login Service Login User: " + username);

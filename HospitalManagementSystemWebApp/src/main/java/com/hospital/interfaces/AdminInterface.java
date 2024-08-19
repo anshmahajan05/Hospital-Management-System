@@ -20,4 +20,8 @@ public interface AdminInterface {
     public boolean updateSchedule(ScheduleTbl schedule) throws ServiceException;
     public HashMap<LocalDate, List<AppointmentTbl>> viewAppointments() throws ServiceException;
     public AppointmentTbl cancelAppointment(long AppointmentId) throws ServiceException;
+    public AuthUserTbl searchUser(long id) throws ServiceException;
+    public PatientTbl searchPatient(long id) throws ServiceException;
+    public ScheduleTbl searchSchedule(long id) throws ServiceException;
+    public AppointmentTbl searchAppointment(long id) throws ServiceException;
 }
