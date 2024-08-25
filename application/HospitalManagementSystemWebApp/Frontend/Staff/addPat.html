@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient - Hospital Staff Dashboard</title>
+    <link rel="stylesheet" href="addPatstyles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile">
+            <img src="profilepic.jpg" alt="Profile">
+            <h3>Staff Name</h3>
+            <p>staff@hospital.com</p>
+            <a href="../login.html" class="logout-btn">Log out</a>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="user2.html">Dashboard</a></li>
+                <li><a href="addPat.html">Add Patient</a></li>
+                <li><a href="book.html">Book Appointment</a></li>
+                <li><a href="viewPat.html">View Appointments</a></li>
+                <li><a href="userProfile.html">View Profile</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Hospital Staff Dashboard</h1>
+            <div class="date">
+                <p>Today's Date</p>
+                <p>2024-08-28</p>
+            </div>
+        </header>
+
+        <section class="staff-function">
+            <h2>Add Patient</h2>
+            <form id="add-patient-form">
+                <div class="form-group">
+                    <label for="patient-name">Name:</label>
+                    <input type="text" id="patient-name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="patient-age">Age:</label>
+                    <input type="number" id="patient-age" name="age" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="patient-gender">Gender:</label>
+                    <select id="patient-gender" name="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="patient-contact">Contact Number:</label>
+                    <input type="tel" id="patient-contact" name="contact" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Add Patient</button>
+            </form>
+            <div id="patient-status" class="status-message"></div>
+        </section>
+    </div>
+      <!-- JavaScript -->
+      <script>
+        document.getElementById('add-patient-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('patient-name').value;
+            const age = document.getElementById('patient-age').value;
+            const gender = document.getElementById('patient-gender').value;
+            const contact = document.getElementById('patient-contact').value;
+
+            // Simulate adding patient (you should replace this with actual logic)
+            document.getElementById('patient-status').textContent = `Patient ${name} added successfully.`;
+            document.getElementById('patient-status').classList.add('success');
+
+        });
+    </script>
+</body>
+</body>
+</html>
