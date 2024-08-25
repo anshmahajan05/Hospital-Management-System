@@ -3,10 +3,10 @@ DA2_Pun_Team2
 Guide for execution 
 
 Frontend: 
->Start with Landing.html it redirects to login page
->sign in as either admin,doctor or user(Hospital Staff)
->Access the dashboard of each entity and perform the functionalities
->logout button to return to the login page
+1) Start with Landing.html it redirects to login page
+2) Sign in as either admin,doctor or user(Hospital Staff)
+3) Access the dashboard of each entity and perform the functionalities
+4) logout button to return to the login page
 
 Backend:
 
