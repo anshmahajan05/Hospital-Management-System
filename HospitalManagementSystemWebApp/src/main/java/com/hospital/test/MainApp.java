@@ -5,6 +5,7 @@ import com.hospital.entity.AuthUserTbl;
 import com.hospital.exception.DatabaseException;
 import com.hospital.exception.ServiceException;
 import com.hospital.factory.HospitalDAOFactory;
+import com.hospital.factory.HospitalServiceFactory;
 import com.hospital.interfaces.*;
 import com.hospital.service.ServiceImpl;
 import org.json.JSONArray;
@@ -21,12 +22,7 @@ public class MainApp {
         try {
             Connection conn = DBConnection.getDBConnection();
 
-            AuthUserDao authUserDao = HospitalDAOFactory.getAuthUserDao(conn);
-            PatientDao patientDao = HospitalDAOFactory.getPatientDao(conn);
-            ScheduleDao scheduleDao = HospitalDAOFactory.getScheduleDao(conn);
-            AppointmentDao appointmentDao = HospitalDAOFactory.getAppointmentDao(conn);
-
-            AdminInterface admin = new ServiceImpl(authUserDao, patientDao, scheduleDao, appointmentDao);
+            AdminInterface admin = HospitalServiceFactory.getAdmin(conn);
 
             // import user using json file
             String content = new String(Files.readAllBytes(Paths.get("src/main/resources/users.json")));
@@ -55,20 +51,18 @@ public class MainApp {
             System.out.println(doctors);
 
             //update the authuser basic details
-//            AuthUserTbl authUser = new AuthUserTbl(2, "pavan kartik", "pavankartik@gmail.com", "9999999999", "doctor");
-//            boolean result = admin.updateAuthUser(authUser);
-//            System.out.println("Update Status-->" + result);
+            AuthUserTbl authUser = new AuthUserTbl(2, "pavan kartik", "pavankartik@gmail.com", "9999999999", "doctor");
+            boolean result = admin.updateAuthUser(authUser);
+            System.out.println("Update Status-->" + result);
 
             // delete the authuser
-//            authUser = admin.deleteAuthUser(2);
-//            System.out.println(authUser);
-//            authUser = admin.deleteAuthUser(1);
-//            System.out.println(authUser);
-//            authUser = admin.deleteAuthUser(3);
-//            System.out.println(authUser);
-        } catch (DatabaseException | ServiceException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            authUser = admin.deleteAuthUser(2);
+            System.out.println("Delete User: " + authUser);
+            authUser = admin.deleteAuthUser(1);
+            System.out.println("Delete User: " + authUser);
+            authUser = admin.deleteAuthUser(3);
+            System.out.println("Delete User: " + authUser);
+        } catch (DatabaseException | ServiceException | IOException e) {
             e.printStackTrace();
         }
     }
