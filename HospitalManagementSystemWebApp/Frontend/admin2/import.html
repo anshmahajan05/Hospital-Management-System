@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Users - Admin Dashboard</title>
+    <link rel="stylesheet" href="importstyles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile">
+            <img src="profilepic.jpg" alt="Profile">
+            <h3>Admin Name</h3>
+            <p>admin@hospital.com</p>
+            <a href="../login.html" class="logout-btn">Log out</a> 
+        </div>
+       
+        <nav>
+            <ul>
+                <li><a href="admin3.html">Dashboard</a></li>
+                <li><a href="import.html">Import Users</a></li>
+                <li><a href="showDoc.html">Show All Doctors</a></li>
+                <li><a href="cancel2.html">Cancel Appointments</a></li>
+                <li><a href="showPat.html">Show All Patients</a></li>
+                <li><a href="view-profile.html" >View Profile</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Import Users</h1>
+            <div class="date">
+                <p>Today's Date</p>
+                <p>2024-08-28</p>
+            </div>
+        </header>
+
+        <section class="import-section">
+            <h2>Upload User Data</h2>
+            <form id="import-form" class="import-form">
+                <div class="form-group">
+                    <label for="file">Upload File (JSON/XML):</label>
+                    <input type="file" id="file" name="file" accept=".json, .xml" required>
+                </div>
+                <button type="submit" class="btn-primary">Import</button>
+                <div id="import-status" class="status-message"></div>
+            </form>
+        </section>
+    </div>
+
+
+    <script>
+        document.getElementById('import-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const fileInput = document.getElementById('file');
+            if (fileInput.files.length === 0) {
+                document.getElementById('import-status').textContent = 'Please select a file to upload.';
+                document.getElementById('import-status').className = 'status-message error';
+                return;
+            }
+            document.getElementById('import-status').textContent = 'File imported successfully!';
+            document.getElementById('import-status').className = 'status-message success';
+        });
+    </script>
+</body>
+</html>

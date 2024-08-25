@@ -1,0 +1,217 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    background-image: url('../hospital-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+.main-content, .sidebar {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+   
+}
+
+.profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile img {
+    width: 100px;
+    border-radius: 50%;
+}
+
+.profile h3 {
+    margin: 10px 0 5px 0;
+    font-size: 18px;
+}
+
+.profile p {
+    font-size: 14px;
+    color: #777;
+}
+
+.logout-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 30px;
+    border-radius: 5px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    margin-bottom: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f6f7f8;
+    color: white;
+}
+
+header h1 {
+    font-size: 24px;
+    color: black;
+    margin: 0;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+/* Footer */
+footer {
+    background-color: #e8ecf1;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Doctor List Styles */
+.doctor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.doctor-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-info {
+    display: flex;
+    gap: 30px;
+}
+
+.doctor-info div {
+    font-size: 16px;
+    color: #333;
+}
+
+.doctor-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary {
+    background-color: #458bd0;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Doctor Details Section */
+.doctor-details {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-details h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.doctor-details p {
+    font-size: 16px;
+    color: black;
+}
+p{
+    color: black;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .doctor-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .doctor-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .doctor-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Profile - Hospital Staff Dashboard</title>
+    <link rel="stylesheet" href="usrProfileStyles.css"> <!-- Ensure this CSS file matches your overall style -->
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="profile">
+            <img src="profilepic.jpg" alt="Profile">
+            <h3>Test Staff</h3>
+            <p>staff@hospital.com</p>
+            <a href="../login.html" class="logout-btn">Log out</a>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="user2.html">Dashboard</a></li>
+                <li><a href="addPat.html">Add Patient</a></li>
+                <li><a href="book.html">Book Appointment</a></li>
+                <li><a href="viewPat.html">View Appointments</a></li>
+                <li><a href="userProfile.html">View Profile</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <h1>View Profile</h1>
+        </header>
+
+        <section class="profile-details">
+            <div class="container">
+                <table class="profile-table">
+                    <tr>
+                        <td class="profile-label">Profile Picture:</td>
+                        <td><img src="profilepic.jpg" alt="Profile Picture" class="profile-img"></td>
+                    </tr>
+                    <tr>
+                        <td class="profile-label">Name:</td>
+                        <td>Test Staff</td>
+                    </tr>
+                    <tr>
+                        <td class="profile-label">Email:</td>
+                        <td>staff@hospital.com</td>
+                    </tr>
+                    <tr>
+                        <td class="profile-label">Phone:</td>
+                        <td>+91 67890-76543</td>
+                    </tr>
+                    <tr>
+                        <td class="profile-label">Position:</td>
+                        <td>Staff Member</td>
+                    </tr>
+                    <tr>
+                        <td class="profile-label">Joined:</td>
+                        <td>February 15, 2022</td>
+                    </tr>
+                </table>
+                <!-- <div class="profile-actions">
+                    <a href="edit-profile.html" class="btn-primary">Edit Profile</a>
+                </div> -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Bankops Hospital Management System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

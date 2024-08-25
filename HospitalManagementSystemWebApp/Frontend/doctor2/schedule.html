@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Schedule - Doctor Dashboard</title>
+    <link rel="stylesheet" href="styles7.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="profile">
+            <img src="doctorprofile.jpg" alt="Profile">
+            <h3>Test Doctor</h3>
+            <p>doctor@edoc.com</p>
+            <a href="../login.html" class="logout-btn">Log out</a>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="doctor3.html">Dashboard</a></li>
+                <li><a href="appointments.html">My Appointments</a></li>
+                <li><a href="schedule.html">Add Schedule</a></li>
+                <li><a href="cancel.html">Cancel Appointments</a></li>
+                <li><a href="medicine.html">Suggest Medicines</a></li>
+                <li><a href="profile.html">View Profile</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <h1>Add Schedule</h1>
+            <div class="date">
+                <p>Today's Date</p>
+                <p>2024-08-28</p>
+            </div>
+        </header>
+
+        <section class="doctor-function">
+            <div class="container">
+                <form id="add-schedule-form">
+                    <!-- Date Input -->
+                    <div class="form-group">
+                        <label for="schedule-date">Date:</label>
+                        <input type="date" id="schedule-date" name="date" required>
+                    </div>
+                    
+                    <!-- Time Input -->
+                    <div class="form-group">
+                        <label for="start-time">Start Time:</label>
+                        <input type="time" id="start-time" name="startTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="end-time">End Time:</label>
+                        <input type="time" id="end-time" name="endTime" required>
+                    </div>
+                    
+                    <!-- Availability Status -->
+                    <div class="form-group">
+                        <label for="availability-status">Availability Status:</label>
+                        <select id="availability-status" name="status" required>
+                            <option value="available">Available</option>
+                            <option value="not-available">Not Available</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-primary">Add Schedule</button>
+                </form>
+                <div id="schedule-status" class="status-message"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('add-schedule-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const date = document.getElementById('schedule-date').value;
+            const startTime = document.getElementById('start-time').value;
+            const endTime = document.getElementById('end-time').value;
+            const status = document.getElementById('availability-status').value;
+
+            // Simulate adding schedule (you should replace this with actual logic)
+            document.getElementById('schedule-status').textContent = `Schedule added for ${date} from ${startTime} to ${endTime}. Status: ${status}`;
+            document.getElementById('schedule-status').classList.add('success');
+        });
+    </script>
+</body>
+</html>
